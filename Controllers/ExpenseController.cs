@@ -1,4 +1,5 @@
-﻿using ExpenseManager.Models;
+﻿using ExpenseManager.DataBase;
+using ExpenseManager.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -8,77 +9,75 @@ using System.Linq;
 
 namespace ExpenseManager.Controllers
 {
-    
+
     public class ExpenseController : Controller
     {
-        private static IList<ExpenseModel> expenses = new List<ExpenseModel>()
+        private readonly IExpenseRepository _expenseRepository;
+        public ExpenseController(IExpenseRepository expenseRepository)
         {
-            new ExpenseModel(){ExpenseId = 1, Name = "batonik", Description = "Snickers z żabki", Amount = 2.99M, Date = new DateTime(2021, 5, 1, 8, 30, 52), Category = 0},
-            new ExpenseModel(){ExpenseId = 2, Name = "Telefon", Description = "samsung galaxy", Amount = 2999, Date = new DateTime(2021, 5, 1, 8, 30, 52), Category = 1}
-        };
-        // GET: ExpenseController
+            _expenseRepository = expenseRepository;
+        }
+
+        // GET: Expense
         public ActionResult Index()
         {
-            return View(expenses);
+            return View(_expenseRepository.GetAllActive());              
         }
 
-        // GET: ExpenseController/Details/5
+        // GET: Expense/Details/5
         public ActionResult Details(int id)
         {
-            return View(expenses.FirstOrDefault(x => x.ExpenseId == id)); //dzieki metodzie FirstOrDefault wyszukuje element o podanym id
+            return View(_expenseRepository.Get(id)); // wyszukuje element o podanym id
         }
 
-        // GET: ExpenseController/Create
-        public ActionResult Create()
+        // GET: Expense/Create
+        public ActionResult Create()                //bezparametrowa metoda create
         {
-            return View(new ExpenseModel());
+            return View(new ExpenseModel());        //przekzuję do widoku nowy parametr ExpenseModel
         }
 
-        // POST: ExpenseController/Create
+        // POST: Expense/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ExpenseModel expenseModel)
+        public ActionResult Create(ExpenseModel expenseModel) //typ ExpenseModel parametr expenseModel
         {
-            expenseModel.ExpenseId = expenses.Count + 1; //"tworzenie" kolejnych identyfikatorów (dodaję 1 w liście) przeliczenie wszystkich elementów +1
-            expenses.Add(expenseModel);                  //do listy expenses dodaje obiekt przesłany w parametrze expenseModel
+            _expenseRepository.Add(expenseModel);
+
             return RedirectToAction(nameof(Index));
             
         }
 
-        // GET: ExpenseController/Edit/5
+        // GET: Expense/Edit/5
         public ActionResult Edit(int id)
         {
-            return View(expenses.FirstOrDefault(x => x.ExpenseId == id));
+            return View(_expenseRepository.Get(id));
         }
 
-        // POST: ExpenseController/Edit/5
+        // POST: Expense/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, ExpenseModel expenseModel)
+        public ActionResult Edit(int id, ExpenseModel expenseModel)                 //typ ExpenseModel typ expenseModel
         {
-            ExpenseModel expense = expenses.FirstOrDefault(x => x.ExpenseId == id);
-            expense.Name = expenseModel.Name;
-            expense.Description = expenseModel.Description;
-            expense.Date = expenseModel.Date;
-            expense.Amount = expenseModel.Amount;
-            expense.Category = expenseModel.Category;
+
+            _expenseRepository.Update(id, expenseModel);
+
             return RedirectToAction(nameof(Index));
             
         }
 
-        // GET: ExpenseController/Delete/5
+        // GET: Expense/Delete/5
         public ActionResult Delete(int id)
         {
-            return View(expenses.FirstOrDefault(x => x.ExpenseId == id));
+            return View(_expenseRepository.Get(id));
         }
 
-        // POST: ExpenseController/Delete/5
+        // POST: Expense /Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, ExpenseModel expenseModel)
         {
-            ExpenseModel expense = expenses.FirstOrDefault(x => x.ExpenseId == id);
-            expenses.Remove(expense);
+            _expenseRepository.Delete(id);
+
             return RedirectToAction(nameof(Index));
         }
             

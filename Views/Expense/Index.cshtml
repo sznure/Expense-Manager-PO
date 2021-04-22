@@ -47,7 +47,7 @@
                 @Enum.GetName(typeof(Categories),(item.Category))
             </td>
             <td>
-                @Html.ActionLink("Edytuj", "Edit", new {  id=item.ExpenseId  })
+                @Html.ActionLink("Edytuj", "Edit", new {  id=item.ExpenseId  })        
                 @Html.ActionLink("Szczegóły", "Details", new {  id=item.ExpenseId  })
                 @Html.ActionLink("Usuń", "Delete", new {  id=item.ExpenseId })
             </td>
