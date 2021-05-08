@@ -1,15 +1,17 @@
 ﻿using ExpenseManager.DataBase;
-using ExpenseManager.Models;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
-
+using System.Security.Claims;
+using ExpenseManager.Models;
 
 namespace ExpenseManager.Controllers
 {
-
+    [Authorize] // dostęp tylko po zalogowaniu się
     public class ExpenseController : Controller
     {
         private readonly IExpenseRepository _expenseRepository;
@@ -19,9 +21,19 @@ namespace ExpenseManager.Controllers
         }
 
         // GET: Expense
-        public ActionResult Index()
+        public ActionResult IndexAll()
         {
             return View(_expenseRepository.GetAllActive());              
+        }
+
+        public ActionResult Index()
+        {
+            var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+            var claim = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var userId = claim.Value;
+           
+            return View(_expenseRepository.GetAllActivePerUser(userId));
+
         }
 
         // GET: Expense/Details/5
@@ -41,6 +53,12 @@ namespace ExpenseManager.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(ExpenseModel expenseModel) //typ ExpenseModel parametr expenseModel
         {
+            var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+            var claim = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var userId = claim.Value;
+
+            expenseModel.UserId = userId;
+
             _expenseRepository.Add(expenseModel);
 
             return RedirectToAction(nameof(Index));
@@ -58,6 +76,11 @@ namespace ExpenseManager.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, ExpenseModel expenseModel)                 //typ ExpenseModel typ expenseModel
         {
+            var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+            var claim = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var userId = claim.Value;
+
+            expenseModel.UserId = userId;
 
             _expenseRepository.Update(id, expenseModel);
 

@@ -39,6 +39,7 @@ namespace ExpenseManager.Models
         [DisplayName("Kategoria")]
         public int Category { get; set; }
 
+        public string UserId { get; set; }
 
     }
 }

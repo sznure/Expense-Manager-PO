@@ -57,6 +57,11 @@ namespace ExpenseManager.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            if (User.Identity.IsAuthenticated)  //jesli uzytkownik jest zalogowany to po wpisaniu adresu logowania przeniesie nas na strone główną
+            {
+                Response.Redirect("/");
+            }
+
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);

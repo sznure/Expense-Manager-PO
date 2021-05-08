@@ -164,3 +164,4 @@ C:\Users\kuba1\source\repos\Projekt_obiektowe\ExpenseManager\obj\Debug\net5.0\Ra
 C:\Users\kuba1\source\repos\Projekt_obiektowe\ExpenseManager\obj\Debug\net5.0\Razor\Areas\Identity\Pages\_ViewStart.cshtml.g.cs
 C:\Users\kuba1\source\repos\Projekt_obiektowe\ExpenseManager\obj\Debug\net5.0\Razor\Views\Shared\_LoginPartial.cshtml.g.cs
 C:\Users\kuba1\source\repos\Projekt_obiektowe\ExpenseManager\obj\Debug\net5.0\Razor\Areas\Identity\Pages\Account\AuthLayout.cshtml.g.cs
+C:\Users\kuba1\source\repos\Projekt_obiektowe\ExpenseManager\obj\Debug\net5.0\Razor\Views\Expense\IndexAll.cshtml.g.cs

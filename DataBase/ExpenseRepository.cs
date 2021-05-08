@@ -1,4 +1,5 @@
-﻿using ExpenseManager.Data;
+﻿using ExpenseManager.Areas.Identity.Data;
+using ExpenseManager.Data;
 using ExpenseManager.Models;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,9 @@ namespace ExpenseManager.DataBase
         public IQueryable<ExpenseModel> GetAllActive()
             => _context.Expenses;
 
+        public IQueryable<ExpenseModel> GetAllActivePerUser(string UserId)
+            => _context.Expenses.Where(x => x.UserId == UserId);
+
         public void Add(ExpenseModel expense)
         {
             _context.Expenses.Add(expense);
@@ -38,7 +42,7 @@ namespace ExpenseManager.DataBase
                 result.Amount = expense.Amount;
                 result.Date = expense.Date;
                 result.Category = expense.Category;
-
+                result.UserId = expense.UserId;
                 _context.SaveChanges();
             }
         }

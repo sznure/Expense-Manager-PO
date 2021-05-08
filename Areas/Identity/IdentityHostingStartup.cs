@@ -19,8 +19,13 @@ namespace ExpenseManager.Areas.Identity
                 services.AddDbContext<ExpenseManagerDBContext>(options =>
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("ExpenseManagerDBContextConnection")));
-
-                services.AddDefaultIdentity<ExpenseManagerUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                /*Ustawienia hasła, zeby nie trzeba było potwierdzać rejestracji przez email */
+                services.AddDefaultIdentity<ExpenseManagerUser>(options => {
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    })
                     .AddEntityFrameworkStores<ExpenseManagerDBContext>();
             });
         }
